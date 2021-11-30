@@ -13,7 +13,7 @@ with open("README.md", "r") as fh:
 setup(
     author='Emelyanenko Kirill',
     name='pyTON',
-    version='0.1.4',
+    version='0.1.5',
     packages=['pyTON'],
     install_requires=requirements,
     package_data={
