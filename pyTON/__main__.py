@@ -203,9 +203,8 @@ async def main(loop):
       except Exception as e:
         print("Can't read provided lite_server_config (%s): %s", args.liteserverconfig, str(e))
 
-    keystore= os.path.expanduser('ton_keystore')
-    if not os.path.exists(keystore):
-        os.makedirs(keystore)
+    keystore = "/tmp/pytonv3/ton_keystore/"
+    os.makedirs(keystore, exist_ok=True)
     tonlib = TonlibClient(loop, lite_server_config, keystore, libtonlibjson)
     await tonlib.init_tonlib()
 
