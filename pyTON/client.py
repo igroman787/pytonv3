@@ -195,8 +195,14 @@ class TonlibClient:
 
                   try:
                       if "msg_data" in ot:
-                          msg_cell_boc = codecs.decode(codecs.encode(ot["msg_data"]["text"], 'utf8'), 'base64')
-                          ot["message"] = msg_cell_boc.decode("utf-8")
+                          if ot["msg_data"]["text"]:
+                              msg_cell_boc = codecs.decode(codecs.encode(ot["msg_data"]["text"], 'utf8'), 'base64')
+                              ot["message"] = msg_cell_boc.decode("utf-8")
+                          else:
+                              msg_cell_boc = codecs.decode(codecs.encode(o["msg_data"]["body"], 'utf8'), 'base64')
+                              message_cell = deserialize_boc(msg_cell_boc)
+                              msg = message_cell.data.data.tobytes()
+                              o["message"] = codecs.decode(codecs.encode(msg, 'base64'), "utf8")
                   except:
                       ot["message"] = ""
 
@@ -209,12 +215,21 @@ class TonlibClient:
 
               try:
                   if "msg_data" in t["in_msg"]:
-                      msg_cell_boc = codecs.decode(codecs.encode(t["in_msg"]["msg_data"]["text"], 'utf8'), 'base64')
-                      t["in_msg"]["message"] = msg_cell_boc.decode("utf-8")
+                      if t["in_msg"]["msg_data"]["text"]:
+                          msg_cell_boc = codecs.decode(codecs.encode(t["in_msg"]["msg_data"]["text"], 'utf8'), 'base64')
+                          t["in_msg"]["message"] = msg_cell_boc.decode("utf-8")
+                      else:
+                          msg_cell_boc = codecs.decode(codecs.encode(t["in_msg"]["msg_data"]["body"], 'utf8'), 'base64')
+                          message_cell = deserialize_boc(msg_cell_boc)
+                          msg = message_cell.data.data.tobytes()
+                          t["in_msg"]["message"] = codecs.decode(codecs.encode(msg, 'base64'), "utf8")
               except:
                   t["in_msg"]["message"] = ""
         except Exception as e:
             print("getTransaction exception", e)
+
+
+
       return all_transactions
 
     async def raw_get_account_state(self, address: str):
